@@ -24,10 +24,28 @@ return {
           local err = {
             source = "trivy",
             message = string.format("%s %s", misconfig.Title, misconfig.Description),
-            col = misconfig.CauseMetadata.StartLine,
+            col = (function ()
+              if misconfig.CauseMetadata.StartLine == nil then
+                return 0
+              else
+                return misconfig.CauseMetadata.StartLine
+              end
+            end)(),
             end_col = misconfig.CauseMetadata.EndLine,
-            lnum = misconfig.CauseMetadata.StartLine - 1,
-            end_lnum = misconfig.CauseMetadata.EndLine - 1,
+            lnum = (function ()
+              if misconfig.CauseMetadata.StartLine == nil then
+                return 0
+              else
+                return misconfig.CauseMetadata.StartLine - 1
+              end
+            end)(),
+            end_lnum = (function ()
+              if misconfig.CauseMetadata.EndLine == nil then
+                return 0
+              else
+                return misconfig.CauseMetadata.EndLine - 1
+              end
+            end)(),
             code = misconfig.ID,
             severity = severity_map[misconfig.Severity],
           }
